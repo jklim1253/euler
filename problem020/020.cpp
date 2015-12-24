@@ -85,26 +85,19 @@ public :
 	}
 };
 
-Number power(const Number& n, const int& e) {
-	if (e == 0)
-		return Number("1");
-	if (e == 1)
-		return n;
-
-	return power(n, e / 2) * power(n, e - e / 2);
-}
 int main(int argc, char* argv[]) {
 
-	Number a("134");
-	Number b("4");
+	Number n("1");
+	Number result("1");
 
-	cout << (a*b) << endl;
-	cout << power(Number("2"), 15) << endl;
-	cout << power(Number("2"), 15).sum_of_index() << endl;
-	cout << power(Number("2"), 1000) << endl;
-	cout << power(Number("2"), 1000).sum_of_index() << endl;
+	for (int i = 0; i < 100; ++i) {
+		result = result * n;
 
-	cin.get();
+		n = n + Number("1");
+	}
+
+	cout << result << endl;
+	cout << result.sum_of_index() << endl;
 
 	return 0;
 }
