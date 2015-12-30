@@ -28,6 +28,8 @@ http://euler.synap.co.kr/
 - [x] 020 : Big Integer의 곱. factorial.
 - [x] 021 : 약수 모음, 친화수
 - [x] 022 : 문자열 정렬.
-- [ ] 023 : 
+- [x] 023 : 초과수의 조합으로 만들 수 없는 수들.
+- [x] 024 : lexicographic permutation.
+- [ ] 025 :
 
 
