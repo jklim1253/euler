@@ -27,6 +27,7 @@ http://euler.synap.co.kr/
 - [x] 019 : 요일 계산, 윤년.
 - [x] 020 : Big Integer의 곱. factorial.
 - [x] 021 : 약수 모음, 친화수
-- [ ] 022 : 
+- [x] 022 : 문자열 정렬.
+- [ ] 023 : 
 
 
