@@ -2,10 +2,34 @@
 #include <sstream>
 using namespace std;
 
-int main(int argc, char* argv[]) {
+/*
+ * find the sum of all the multiples of 3 or 5 below limit.
+ *
+ */
+template<typename T>
+inline bool dividable(const T& target, const T& arg) {
+	return (target%arg == 0);
+}
+template<typename T, typename First, typename... Rest>
+inline bool dividable(const T& target, const First& first, const Rest&... args) {
+	return dividable(target, first) || dividable(target, args...);
+}
+template<typename T, typename... Arguments>
+T sum_of_multiples(const T& limit, const Arguments&... args) {
+	T sum = 0;
+	for (T i = 1; i <= limit; ++i) {
+		if (dividable(i, args...)) {
+			sum += i;
+			cout << i << ' ';
+		}
+	}
+	cout << endl;
+	return sum;
+}
 
+int main(int argc, char* argv[]) {
 	if (argc != 2) {
-		cerr << "Usage : 001 [number]" << endl;
+		cerr << "Usage : 001 [limit-number]" << endl;
 		return 1;
 	}
 
@@ -13,11 +37,7 @@ int main(int argc, char* argv[]) {
 	int limit;
 	is >> limit;
 
-	int sum = 0;
-	for (int i = 3; i < limit; ++i) {
-		if (i % 3 == 0 || i % 5 == 0)
-			sum += i;
-	}
+	int sum = sum_of_multiples(limit, 3, 5);
 
 	cout << "sum of those : " << sum << endl;
 
