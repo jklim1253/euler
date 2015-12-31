@@ -2,37 +2,42 @@
 #include <sstream>
 using namespace std;
 
-int fibo(const int& limit) {
-	int result = 0;
+/*
+ * find the sum of even-valued terms in the Fibonacci sequence.
+ *
+ */
+template<typename T, typename UnaryFunction>
+T sum_of_fibo_range(const T& from, const T& to, UnaryFunction& condi) {
+	const int size = 3;
+	T sum = 0;
+	T arr[size] = { 1,2, };
+	int index = 0;
+	while (arr[index%size] <= to) {
+		arr[(index + 2)%size] = arr[(index + 1)%size] + arr[index%size];
 
-	int n = 1;
-	int n_1 = 2;
-	int n_2;
+		if (arr[index%size] >= from && condi(arr[index%size])) {
+			sum += arr[index%size];
+		}
 
-	result += n_1;
-
-	while ((n_2 = n + n_1) <= limit) {
-		if (n_2 % 2 == 0)
-			result += n_2;
-		n = n_1;
-		n_1 = n_2;
+		++index;
 	}
 
-	return result;
+	return sum;
 }
 
 int main(int argc, char* argv[]) {
-
 	if (argc != 2) {
-		cerr << "002 [number]" << endl;
+		cerr << "Usage : 002 [limit-number]" << endl;
 		return 1;
 	}
-
 	istringstream is(argv[1]);
 	int limit;
 	is >> limit;
 
-	cout << "sum of those : " << fibo(limit) << endl;
+	int sum = sum_of_fibo_range(1, limit, [](const int& v) -> bool {
+		return (v % 2 == 0);
+	});
+	cout << "sum of those : " << sum << endl;
 
 	return 0;
 }
