@@ -5,3 +5,5 @@
 *.exe
 *.o
 
+# ignore test folder
+test/
