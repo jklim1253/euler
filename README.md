@@ -42,6 +42,7 @@ http://euler.synap.co.kr/
 - [x] 034 : 신기한 숫자 찾기. 팩토리얼 이용. (template으로 미리 계산이 가능할 것 같은데 나중에 다시 시도)
 - [x] 035 : circular prime 갯수 헤아리기.
 - [x] 036 : palindrome 숫자 찾기, 이진수 표현식으로도 palindrome 이여야 함.
-- [ ] 037 : 
+- [x] 037 : trunctable prime 찾기, 11개라는 조건이 있음.
+- [ ] 038 : 
 
 
