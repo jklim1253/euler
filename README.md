@@ -43,6 +43,7 @@ http://euler.synap.co.kr/
 - [x] 035 : circular prime 갯수 헤아리기.
 - [x] 036 : palindrome 숫자 찾기, 이진수 표현식으로도 palindrome 이여야 함.
 - [x] 037 : trunctable prime 찾기, 11개라는 조건이 있음.
-- [ ] 038 : 
+- [x] 038 : 가장 큰 pandigital 찾기.
+- [ ] 039 : 
 
 
