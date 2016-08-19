@@ -22,7 +22,7 @@ public :
 	{
 		find_recurring_cycle();
 	}
-	const size_t precision() const {
+	size_t precision() const {
 		return _precision;
 	}
 	size_t precision(size_t preci) {
