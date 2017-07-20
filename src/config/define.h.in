@@ -1,0 +1,6 @@
+#pragma once
+
+namespace euler_solution
+{
+static const char* base_dir = "@PROJECT_SOURCE_DIR@";
+}

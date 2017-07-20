@@ -1,4 +1,7 @@
-# Euler 풀이
+# Euler Solutions
+
+> 2017-07-18 : each problem source have only one public class.
+> 2017-07-18 : build tool changed (make => cmake)
 
 ## Problem URL
 
@@ -6,7 +9,7 @@ http://euler.synap.co.kr/
 
 ## Problem List
 
-- [x] 001 : 배수 찾기.
+- [x] 001 : 배수의 합 찾기.
 - [x] 002 : 피보나치 수열.
 - [x] 003 : 소인수 분해.
 - [x] 004 : 대칭수(palindrome).
@@ -45,6 +48,7 @@ http://euler.synap.co.kr/
 - [x] 037 : trunctable prime 찾기, 11개라는 조건이 있음.
 - [x] 038 : 가장 큰 pandigital 찾기.
 - [x] 039 : 주어진 조건을 만족하는 자연수로 된 면을 가진 직각삼각형의 각 면의 종류를 최대가지를 찾아라. 1000 이하, 10000이하 도전해봤는데 금방 찾아짐. 기쁨.
-- [ ] 040 : 
+- [x] 040 : 숫자를 소수점이하로 이어 붙였을 때 주어진 인덱스에 위치하는 값을 찾아라.
+- [ ] 041 :
 
 
