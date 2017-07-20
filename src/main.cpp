@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <chrono>
 #include <functional>
+#include <memory>
 using namespace std;
 #include "inc/error_code.h"
 #include "inc/basic_question.hpp"
@@ -36,11 +37,8 @@ int do_work(MemberFunction&& func, Cls* obj, Arguments&&...args)
     return (obj->*func)(args...);
 }
 
-template<typename T>
-int printfile(const T& _filepath)
+int printfile(const string& filepath)
 {
-    const string filepath(_filepath);
-
     cout << "filepath : " << filepath << endl;
 
     fstream file;
@@ -54,8 +52,7 @@ int printfile(const T& _filepath)
     string line;
     while (getline(file, line))
     {
-        cout << setw(4) << right << (++line_number) << "    ";
-        cout << line << '\n';
+        cout << setw(4) << right << (++line_number) << ' ' << line << '\n';
     }
 
     file.close();
@@ -63,56 +60,129 @@ int printfile(const T& _filepath)
     return ec::no_error;
 }
 
+int print_source_file(int selection);
+int execute_shared_function(int selection);
+
 int main()
 {
     // select question number.
     //
     // load question solution file and view on console.
     //
-    const int group_size = 30;
-    int select = 0;
-    do {
-        std::cout << "select number of question to view( > 0) : ";
-        std::cin >> select;
-    } while (!(select > 0));
+    bool manual_stop = false;
+    const string error_msg = "error code : ";
 
-    int folder = group_size * (1 + (select-1)/group_size);
-
-    std::stringstream ss;
-    ss << euler_solution::base_dir << "/src/";
-    ss << setw(3) << setfill('0') << folder << "/";
-    ss << setw(3) << setfill('0') << select;
-    ss << ".cpp";
-
-    const string srcfile(ss.str());
-    int ret;
-    if ((ret = do_work(printfile<decltype(srcfile)>, srcfile)) != ec::no_error)
+    while (!manual_stop)
     {
-        cout << "error code : " << ret << endl;
-    }
+        string line;
+        int select = 0;
+        do {
+            std::cout << "================================================================================\n";
+            std::cout << "select number of question to view( > 0, enter quit to exit) :> ";
+            getline(std::cin, line);
+            select = atoi(line.c_str());
+        } while (!(select >= 0));
 
-    std::stringstream dllname;
-    dllname << setw(3) << setfill('0') << select << ".dll";
+        if (select == 0 && line == "quit")
+        {
+            manual_stop = true;
+            continue;
+        }
 
-    HMODULE hSolution = ::LoadLibrary(dllname.str().c_str());
-    if (hSolution == NULL)
-    {
-        cout << "failed to load library dynamically." << endl;
-        return ec::failed_to_load_library_dynamically;
-    }
+        int error;
+        // view source of selected solution.
+        if ((error = print_source_file(select)) != ec::no_error)
+        {
+            cout << error_msg << error << ':' << ec::error_message[error] << endl;
+        }
 
-    typedef basic_question*(*CreateInstanceFunction)();
-    CreateInstanceFunction CreateInstanceAddr = (CreateInstanceFunction)::GetProcAddress(hSolution, "CreateInstance");
-    if (CreateInstanceAddr == NULL)
-    {
-        cout << "failed to get CreateInstance address." << endl;
-        return ec::failed_to_get_createinstance_address;
-    }
-
-    basic_question* quest = (*CreateInstanceAddr)();
-
-    do_work(&basic_question::execute, quest);
+        // execute selected solution.
+        if ((error = execute_shared_function(select)) != ec::no_error)
+        {
+            cout << error_msg << error << ':' << ec::error_message[error] << endl;
+        }
+    } // while (!manual_stop)
 
     return ec::no_error;
 }
 
+int print_source_file(int selection)
+{
+    const int group_size = 30;
+
+    const int folder = group_size * (1 + (selection-1)/group_size);
+
+    std::stringstream source_path;
+    source_path << euler_solution::base_dir << "/src/";
+    source_path << setw(3) << setfill('0') << folder << "/";
+    source_path << setw(3) << setfill('0') << selection << ".cpp";
+
+    return do_work(printfile, source_path.str());
+}
+
+class SharedLoader
+{
+    HMODULE module;
+public :
+    SharedLoader(const string& name)
+    {
+        module = ::LoadLibrary(name.c_str());
+        if (module == NULL) throw ec::failed_to_load_library_dynamically;
+    }
+    ~SharedLoader()
+    {
+        ::FreeLibrary(module);
+    }
+    operator HMODULE() const
+    {
+        return module;
+    }
+};
+
+template<typename Function>
+class SharedExecutor
+{
+    Function operation;
+    SharedLoader& library;
+public :
+    SharedExecutor(SharedLoader& _library, const string& _name)
+        : library(_library)
+        , operation(Function(::GetProcAddress(_library, _name.c_str())))
+    {
+        if (operation == NULL) throw ec::failed_to_get_createinstance_address;
+    }
+    ~SharedExecutor()
+    {
+    }
+    int operator()()
+    {
+        unique_ptr<basic_question> quest((*operation)());
+
+        return do_work(&basic_question::execute, quest.get());
+    }
+};
+
+int execute_shared_function(int selection)
+{
+    std::stringstream dllname;
+    dllname << setw(3) << setfill('0') << selection << ".dll";
+
+    try
+    {
+        SharedLoader shared_library(dllname.str());
+
+        SharedExecutor<decltype(&CreateInstance)> shared_execution(shared_library, "CreateInstance");
+
+        return shared_execution();
+    }
+    catch (ec::errorcode error)
+    {
+        return error;
+    }
+    catch (...)
+    {
+        return ec::exception_occur;
+    }
+
+    return ec::no_error;
+}
