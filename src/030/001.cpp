@@ -43,13 +43,11 @@ private :
     }
 };
 
-#include <iostream>
-extern "C" {
-
-SOLUTION_API basic_question* CreateInstance()
+extern "C"
 {
-    std::cout << "create q001 instance" << std::endl;
-    return new q001();
-}
-
+    SOLUTION_API basic_question* CreateInstance()
+    {
+        std::cout << "create q001 instance" << std::endl;
+        return new q001();
+    }
 } // extern "C"
