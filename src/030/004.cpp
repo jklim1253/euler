@@ -3,16 +3,16 @@
 #include <string>
 #include <algorithm>
 using namespace std;
-#include "../inc/basic_question.hpp"
+#include "inc/basic_question.hpp"
+#include "inc/error_code.h"
 
-class q004 : public basic_question<q004>
+class SOLUTION_API q004 : public basic_question
 {
 public :
-    void execute() override final
+    int execute() override final
     {
-        int from, to;
-        from = 1;
-        to = 10000;
+        const int from = 100;
+        const int to = 999;
 
         cout << from << " ~ " << to << endl;
 
@@ -26,6 +26,8 @@ public :
             }
         }
         cout << "max palindrome : " << result << endl;
+
+        return ec::no_error;
     }
 private :
     template<typename T>
@@ -41,3 +43,11 @@ private :
 
 };
 
+extern "C"
+{
+    SOLUTION_API basic_question* CreateInstance()
+    {
+        std::cout << "create q004 instance" << std::endl;
+        return new q004();
+    }
+} // extern "C"

@@ -1,24 +1,26 @@
 #include <iostream>
 #include <sstream>
 using namespace std;
-#include "../inc/basic_question.hpp"
+#include "inc/basic_question.hpp"
+#include "inc/error_code.h"
 
 /*
  * find the sum of even-valued terms in the Fibonacci sequence.
  *
  */
-class q002 : public basic_question<q002>
+class SOLUTION_API q002 : public basic_question
 {
 public :
-    void execute() override final
+    int execute() override final
     {
-        int limit = 1000;
+        int limit = 4000000;
 
         int sum = sum_of_fibo_range(1, limit, [](const int& v) -> bool {
             return (v % 2 == 0);
         });
         cout << "sum of those : " << sum << endl;
 
+        return ec::no_error;
     }
 private :
     template<typename T, typename UnaryFunction>
@@ -44,3 +46,11 @@ private :
     }
 };
 
+extern "C"
+{
+    SOLUTION_API basic_question* CreateInstance()
+    {
+        std::cout << "create q002 instance" << std::endl;
+        return new q002();
+    }
+} // extern "C"

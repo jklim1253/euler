@@ -2,17 +2,20 @@
 #include <sstream>
 #include <set>
 using namespace std;
-#include "../inc/basic_question.hpp"
+#include "inc/basic_question.hpp"
+#include "inc/error_code.h"
 
-class q003 : public basic_question<q003>
+class SOLUTION_API q003 : public basic_question
 {
 public :
-    void execute() override final
+    int execute() override final
     {
-        unsigned long long input = 100000;
+        unsigned long long input = 600851475143;
 
         cout << "factor of " << input << " are : " << endl;
         cout << factor<decltype(input)>(input) << endl;
+
+        return ec::no_error;
     }
 private :
     template<typename T>
@@ -64,3 +67,11 @@ private :
 
 };
 
+extern "C"
+{
+    SOLUTION_API basic_question* CreateInstance()
+    {
+        std::cout << "create q003 instance" << std::endl;
+        return new q003();
+    }
+} // extern "C"

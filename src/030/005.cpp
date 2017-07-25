@@ -4,53 +4,65 @@
 #include <cmath>
 #include <algorithm>
 using namespace std;
-#include "../inc/basic_question.hpp"
+#include "inc/basic_question.hpp"
+#include "inc/error_code.h"
 
-map<int, int> find_factor(const int& n) {
-	map<int, int> factors;
-	int N = n;
-	int i = 2;
-	while (N != 1) {
-		if (N%i == 0) {
-			++factors[i];
-			N = N / i;
-			i = 2;
-		}
-		else if (i > sqrt(N)) {
-			++factors[N];
-			break;
-		}
-		else {
-			++i;
-		}
-	}
-	return factors;
-}
+class SOLUTION_API q005 : public basic_question
+{
+    typedef map<int, int> depot_type;
+public :
+    int execute() override final
+    {
+        int from = 1, to = 20;
 
-int main(int argc, char* argv[]) {
+        depot_type collection;
+        for (int i = from; i <= to; ++i)
+        {
+            depot_type factors = find_factor(i);
+            for (auto it = factors.begin(); it != factors.end(); ++it)
+            {
+                collection[it->first] = max(collection[it->first], factors[it->first]);
+            }
+        }
 
-	if (argc != 3) {
-		cerr << "Usage : 005 [number] [number]" << endl;
-		return 1;
-	}
-	istringstream is(string(argv[1]) + " " + argv[2]);
-	int from, to;
-	is >> from >> to;
+        int result = 1;
+        for (auto it = collection.begin(); it != collection.end(); ++it)
+        {
+            result = result*pow(it->first, it->second);
+        }
 
-	map<int, int> collection;
-	for (int i = from; i <= to; ++i) {
-		map<int, int> factors = find_factor(i);
-		for (auto it = factors.begin(); it != factors.end(); ++it) {
-			collection[it->first] = max(collection[it->first], factors[it->first]);
-		}
-	}
+        cout << "result : " << result << endl;
 
-	int result = 1;
-	for (auto it = collection.begin(); it != collection.end(); ++it) {
-		result = result*pow(it->first, it->second);
-	}
+        return ec::no_error;
+    }
+private :
+    depot_type find_factor(const int& n) {
+        depot_type factors;
+        int N = n;
+        int i = 2;
+        while (N != 1) {
+            if (N%i == 0) {
+                ++factors[i];
+                N = N / i;
+                i = 2;
+            }
+            else if (i > sqrt(N)) {
+                ++factors[N];
+                break;
+            }
+            else {
+                ++i;
+            }
+        }
+        return factors;
+    }
+};
 
-	cout << "result : " << result << endl;
-
-	return 0;
-}
+extern "C"
+{
+    SOLUTION_API basic_question* CreateInstance()
+    {
+        std::cout << "create q005 instance" << std::endl;
+        return new q005();
+    }
+} // extern "C"
