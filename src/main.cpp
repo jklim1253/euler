@@ -20,7 +20,7 @@ public :
     elapsed_time_checker() : st(chrono::steady_clock::now()) {}
     ~elapsed_time_checker()
     {
-        cout << "\nelapsed time : " << (chrono::duration<double>(chrono::steady_clock::now() - st)).count() << endl;
+        cout << "\nelapsed time : " << fixed << (chrono::duration<double>(chrono::steady_clock::now() - st)).count() << endl;
     }
 };
 
@@ -93,13 +93,13 @@ int main()
         // view source of selected solution.
         if ((error = print_source_file(select)) != ec::no_error)
         {
-            cout << error_msg << error << ':' << ec::error_message[error] << endl;
+            cout << error_msg << error << " : " << ec::error_message[error] << endl;
         }
 
         // execute selected solution.
         if ((error = execute_shared_function(select)) != ec::no_error)
         {
-            cout << error_msg << error << ':' << ec::error_message[error] << endl;
+            cout << error_msg << error << " : " << ec::error_message[error] << endl;
         }
     } // while (!manual_stop)
 
